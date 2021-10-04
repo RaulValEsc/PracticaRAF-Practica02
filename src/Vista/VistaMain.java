@@ -5,8 +5,11 @@
  */
 package Vista;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.RandomAccessFile;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -17,6 +20,7 @@ import javax.swing.JOptionPane;
 public class VistaMain extends javax.swing.JFrame {
 
     File f;
+    RandomAccessFile raf;
 
     /**
      * Creates new form Vista
@@ -79,11 +83,13 @@ public class VistaMain extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gestor de Matrículas");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setIconImage(getIconImage());
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Modificar Matrícula"));
 
         jLabel1.setText("Numero Matrícula");
 
+        etnMatMod.setEditable(false);
         etnMatMod.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 etnMatModKeyTyped(evt);
@@ -93,6 +99,7 @@ public class VistaMain extends javax.swing.JFrame {
         bEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/editar-usuario.png"))); // NOI18N
         bEditar.setText("Editar");
         bEditar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        bEditar.setEnabled(false);
         bEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bEditarActionPerformed(evt);
@@ -110,7 +117,7 @@ public class VistaMain extends javax.swing.JFrame {
                 .addComponent(etnMatMod, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(85, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(bEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(85, 85, 85))
         );
@@ -131,6 +138,7 @@ public class VistaMain extends javax.swing.JFrame {
         bCrear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/agregar-usuario.png"))); // NOI18N
         bCrear.setText("Crear");
         bCrear.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        bCrear.setEnabled(false);
         bCrear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bCrearActionPerformed(evt);
@@ -142,7 +150,7 @@ public class VistaMain extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(85, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(bCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(85, 85, 85))
         );
@@ -158,6 +166,7 @@ public class VistaMain extends javax.swing.JFrame {
 
         jLabel2.setText("Numero Matrícula");
 
+        etnMatBorr.setEditable(false);
         etnMatBorr.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 etnMatBorrKeyTyped(evt);
@@ -167,6 +176,7 @@ public class VistaMain extends javax.swing.JFrame {
         bBorrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/elminar-usuario.png"))); // NOI18N
         bBorrar.setText("Borrar");
         bBorrar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        bBorrar.setEnabled(false);
         bBorrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bBorrarActionPerformed(evt);
@@ -184,7 +194,7 @@ public class VistaMain extends javax.swing.JFrame {
                 .addComponent(etnMatBorr, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(85, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(bBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(85, 85, 85))
         );
@@ -204,6 +214,7 @@ public class VistaMain extends javax.swing.JFrame {
 
         jLabel3.setText("Numero Matrícula");
 
+        etnMatBusc.setEditable(false);
         etnMatBusc.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 etnMatBuscKeyTyped(evt);
@@ -213,6 +224,7 @@ public class VistaMain extends javax.swing.JFrame {
         bBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/buscar.png"))); // NOI18N
         bBuscar.setText("Buscar");
         bBuscar.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        bBuscar.setEnabled(false);
         bBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bBuscarActionPerformed(evt);
@@ -230,7 +242,7 @@ public class VistaMain extends javax.swing.JFrame {
                 .addComponent(etnMatBusc, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(85, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(bBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(85, 85, 85))
         );
@@ -298,6 +310,7 @@ public class VistaMain extends javax.swing.JFrame {
         jMenu3.add(mAbrir);
 
         mCerrar.setText("Cerrar Archivo");
+        mCerrar.setEnabled(false);
         mCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mCerrarActionPerformed(evt);
@@ -364,20 +377,38 @@ public class VistaMain extends javax.swing.JFrame {
         if (seleccion == JFileChooser.APPROVE_OPTION) {
             File faux = fc.getSelectedFile();
             String nombre = JOptionPane.showInputDialog(this, "Introduce el nombre del fichero", JOptionPane.QUESTION_MESSAGE);
-            f = new File(faux.getAbsolutePath() + "\\" + nombre + ".txt");
+            if (nombre.equals("")) {
+                JOptionPane.showMessageDialog(this, "El nombre del fichero no puede estar vacío");
+            } else {
+                f = new File(faux.getAbsolutePath() + "\\" + nombre + ".txt");
+                JOptionPane.showMessageDialog(this, "Fichero creado correctamente");
+                activarComponentes();
+                mCerrar.setEnabled(true);
+                rellenarTabla();
+            }
         }
     }//GEN-LAST:event_mCrearActionPerformed
 
     private void bCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCrearActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_bCrearActionPerformed
 
     private void mAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAbrirActionPerformed
-        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(this, "Seleccione la ruta donde desea crear el fichero");
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int seleccion = fc.showOpenDialog(this);
+        if (seleccion == JFileChooser.APPROVE_OPTION) {
+            f = fc.getSelectedFile();
+            JOptionPane.showMessageDialog(this, "Fichero abierto correctamente");
+            activarComponentes();
+            mCerrar.setEnabled(true);
+            rellenarTabla();
+        }
     }//GEN-LAST:event_mAbrirActionPerformed
 
     private void mCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCerrarActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_mCerrarActionPerformed
 
     private void etnMatModKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_etnMatModKeyTyped
@@ -436,6 +467,26 @@ public class VistaMain extends javax.swing.JFrame {
                 new VistaMain().setVisible(true);
             }
         });
+    }
+
+    public void activarComponentes() {
+        bBorrar.setEnabled(true);
+        bBuscar.setEnabled(true);
+        bCrear.setEnabled(true);
+        bEditar.setEnabled(true);
+        etnMatBorr.setEditable(true);
+        etnMatBusc.setEditable(true);
+        etnMatMod.setEditable(true);
+    }
+
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Images/red-social.png"));
+        return retValue;
+    }
+    
+    private void rellenarTabla() {
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
