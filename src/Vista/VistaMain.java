@@ -5,13 +5,19 @@
  */
 package Vista;
 
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -19,6 +25,20 @@ import javax.swing.JOptionPane;
  */
 public class VistaMain extends javax.swing.JFrame {
 
+    /*
+        id = 4
+        nombre = 40 char[20]
+        double = 8
+        fecha = 16 char[8]
+     */
+    public static int TAMANIO = 68;
+
+    public static int idModif;
+    public static String nomModif;
+    public static Double notModif;
+    public static String fecModif;
+
+    public static String path;
     File f;
     RandomAccessFile raf;
 
@@ -358,15 +378,113 @@ public class VistaMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditarActionPerformed
-        // TODO add your handling code here:
+        try {
+            int idMod = Integer.parseInt(etnMatMod.getText());
+            raf = new RandomAccessFile(f, "rw");
+
+            if (((idMod - 1) * TAMANIO) >= raf.length()) {
+                getToolkit().beep();
+                JOptionPane.showMessageDialog(this, "La matrícula con id " + idMod + " no existe.", "Error al modificar.", JOptionPane.ERROR_MESSAGE);
+            } else {
+                raf.seek((idMod - 1) * TAMANIO);
+                int aux = raf.readInt();
+                if (aux == idMod) {
+                    idModif = -1;
+                    nomModif = "";
+                    notModif = Double.parseDouble("-1.2");
+                    fecModif = "";
+                    raf.seek((idMod - 1) * TAMANIO);
+                    idModif = raf.readInt();
+                    for (int i = 0; i < 20; i++) {
+                        nomModif += raf.readChar();
+                    }
+                    notModif = raf.readDouble();
+                    for (int i = 0; i < 8; i++) {
+                        fecModif += raf.readChar();
+                    }
+                    ModificarDialog md = new ModificarDialog(this, true);
+                    md.setVisible(true);
+                } else {
+                    getToolkit().beep();
+                    JOptionPane.showMessageDialog(this, "La matrícula con id " + idMod + " no existe.", "Error al modificar.", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            raf.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(VistaMain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(VistaMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        etnMatMod.setText("");
+        rellenarTabla();
     }//GEN-LAST:event_bEditarActionPerformed
 
     private void bBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBorrarActionPerformed
-        // TODO add your handling code here:
+        try {
+            int idborr = Integer.parseInt(etnMatBorr.getText());
+            raf = new RandomAccessFile(f, "rw");
+
+            if (((idborr - 1) * TAMANIO) >= raf.length()) {
+                getToolkit().beep();
+                JOptionPane.showMessageDialog(this, "La matrícula con id " + idborr + " no existe.", "Error al borrar.", JOptionPane.ERROR_MESSAGE);
+            } else {
+                raf.seek((idborr - 1) * TAMANIO);
+                int aux = raf.readInt();
+                if (aux == idborr) {
+                    raf.seek((idborr - 1) * TAMANIO);
+                    raf.writeInt(0);
+                    JOptionPane.showMessageDialog(this, "La matrícula con id " + idborr + " ha sido borrada con éxito.");
+                } else {
+                    getToolkit().beep();
+                    JOptionPane.showMessageDialog(this, "La matrícula con id " + idborr + " no existe o ya fue borrada.", "Error al borrar.", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            raf.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(VistaMain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(VistaMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        etnMatBorr.setText("");
+        rellenarTabla();
     }//GEN-LAST:event_bBorrarActionPerformed
 
     private void bBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarActionPerformed
-        // TODO add your handling code here:
+        try {
+            DefaultTableModel modelo = (DefaultTableModel) Tabla.getModel();
+            modelo.setRowCount(0);
+            int idbusc = Integer.parseInt(etnMatBusc.getText());
+            raf = new RandomAccessFile(f, "rw");
+            if (((idbusc - 1) * TAMANIO) >= raf.length()) {
+                getToolkit().beep();
+                JOptionPane.showMessageDialog(this, "La matrícula con id " + idbusc + " no existe.", "Error al buscar.", JOptionPane.ERROR_MESSAGE);
+            } else {
+                raf.seek((idbusc - 1) * TAMANIO);
+                int aux = raf.readInt();
+                if (aux == idbusc) {
+                    raf.seek((idbusc - 1) * TAMANIO);
+                    int x = raf.readInt();
+                    String auxn = "";
+                    String faux = "";
+                    for (int i = 0; i < 20; i++) {
+                        auxn += raf.readChar();
+                    }
+                    Double nota = raf.readDouble();
+                    for (int i = 0; i < 8; i++) {
+                        faux += raf.readChar();
+                    }
+                    modelo.addRow(new Object[]{x, auxn, nota, faux});
+                } else {
+                    getToolkit().beep();
+                    JOptionPane.showMessageDialog(this, "La matrícula con id " + idbusc + " no existe.", "Error al buscar.", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            raf.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(VistaMain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(VistaMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_bBuscarActionPerformed
 
     private void mCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCrearActionPerformed
@@ -381,6 +499,7 @@ public class VistaMain extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "El nombre del fichero no puede estar vacío");
             } else {
                 f = new File(faux.getAbsolutePath() + "\\" + nombre + ".txt");
+                path = f.getAbsolutePath();
                 JOptionPane.showMessageDialog(this, "Fichero creado correctamente");
                 activarComponentes();
                 mCerrar.setEnabled(true);
@@ -390,7 +509,9 @@ public class VistaMain extends javax.swing.JFrame {
     }//GEN-LAST:event_mCrearActionPerformed
 
     private void bCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCrearActionPerformed
-
+        CrearDialog cd = new CrearDialog(this, true);
+        cd.setVisible(true);
+        rellenarTabla();
     }//GEN-LAST:event_bCrearActionPerformed
 
     private void mAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAbrirActionPerformed
@@ -400,6 +521,7 @@ public class VistaMain extends javax.swing.JFrame {
         int seleccion = fc.showOpenDialog(this);
         if (seleccion == JFileChooser.APPROVE_OPTION) {
             f = fc.getSelectedFile();
+            path = f.getAbsolutePath();
             JOptionPane.showMessageDialog(this, "Fichero abierto correctamente");
             activarComponentes();
             mCerrar.setEnabled(true);
@@ -408,7 +530,18 @@ public class VistaMain extends javax.swing.JFrame {
     }//GEN-LAST:event_mAbrirActionPerformed
 
     private void mCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCerrarActionPerformed
-        
+        f = null;
+        raf = null;
+        DefaultTableModel modelo = (DefaultTableModel) Tabla.getModel();
+        modelo.setRowCount(0);
+        bBorrar.setEnabled(false);
+        bBuscar.setEnabled(false);
+        bCrear.setEnabled(false);
+        bEditar.setEnabled(false);
+        etnMatBorr.setEditable(false);
+        etnMatBusc.setEditable(false);
+        etnMatMod.setEditable(false);
+        mCerrar.setEnabled(false);
     }//GEN-LAST:event_mCerrarActionPerformed
 
     private void etnMatModKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_etnMatModKeyTyped
@@ -430,6 +563,9 @@ public class VistaMain extends javax.swing.JFrame {
         if (!Character.isDigit(num) && evt.getKeyChar() != KeyEvent.VK_BACK_SPACE) {
             evt.consume();
             getToolkit().beep();
+        }
+        if (etnMatBusc.getText().length() == 0 && evt.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
+            rellenarTabla();
         }
     }//GEN-LAST:event_etnMatBuscKeyTyped
 
@@ -484,9 +620,36 @@ public class VistaMain extends javax.swing.JFrame {
         Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Images/red-social.png"));
         return retValue;
     }
-    
+
     private void rellenarTabla() {
-        
+        try {
+            DefaultTableModel modelo = (DefaultTableModel) Tabla.getModel();
+            modelo.setRowCount(0);
+            raf = new RandomAccessFile(f, "rw");
+            int contador = 0;
+            while (contador * TAMANIO < raf.length()) {
+                raf.seek(contador * TAMANIO);
+                int x = raf.readInt();
+                String aux = "";
+                String faux = "";
+                if (x != 0) {
+                    for (int i = 0; i < 20; i++) {
+                        aux += raf.readChar();
+                    }
+                    Double nota = raf.readDouble();
+                    for (int i = 0; i < 8; i++) {
+                        faux += raf.readChar();
+                    }
+                    modelo.addRow(new Object[]{x, aux, nota, faux});
+                }
+                contador++;
+            }
+            raf.close();
+        } catch (FileNotFoundException ex) {
+            System.out.println("Ha ocurrido un error: " + ex.getMessage());
+        } catch (IOException ex) {
+            System.out.println("Ha ocurrido un error: " + ex.getMessage());
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
